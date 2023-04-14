@@ -1,9 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,28 +12,30 @@ namespace DomainLayer.BusinessLogic
         CancellationTokenSource cancellationTokenSource;
         CancellationToken cancellationToken;
 
-        public Action<bool> _processStateActive;
+        public Action<bool> _processActiveStateChanged;
 
-        public TextProcessor(Action<bool> processStateChanged)
+        public TextProcessor(Action<bool> processActiveStateChanged)
         {
-            _processStateActive = processStateChanged;
+            _processActiveStateChanged = processActiveStateChanged;
         }
 
         public void StopProcess()
         {
             cancellationTokenSource.Cancel();
 
+            _processActiveStateChanged.Invoke(false);
+
             Debug.WriteLine("Process stoped!");
         }
 
-        public async void ProcessAsync(string fileName, Action<double> progressAction)
+        public async Task ProcessAsync(string fileName, Action<double> progressAction, Action<string> wordsOutput)
         {
-            _processStateActive.Invoke(true);
+            _processActiveStateChanged.Invoke(true);
 
             cancellationTokenSource = new CancellationTokenSource();
             cancellationToken = cancellationTokenSource.Token;
 
-            string[] words = File.ReadAllText(fileName).Split(' ');
+            string[] words = File.ReadAllText(fileName).Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             Dictionary<string, int> wordCounts = new Dictionary<string, int>();
 
@@ -44,21 +44,19 @@ namespace DomainLayer.BusinessLogic
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
-                if (wordCounts.ContainsKey(words[i]))                
-                    wordCounts[words[i]]++;                
-                else                
-                    wordCounts.Add(words[i], 1);
-                
+                wordsOutput.Invoke(words[i]);
 
                 Debug.WriteLine(i);
 
                 await Task.Delay(10);
 
-                double progress = (double)100 / words.Length ;
+                double progress = (double)100 / words.Length;
                 progressAction.Invoke(progress);
             }
 
-            _processStateActive.Invoke(false);
+            _processActiveStateChanged.Invoke(false);
+
+            return;
         }
     }
 }

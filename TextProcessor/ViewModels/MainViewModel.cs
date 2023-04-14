@@ -1,6 +1,8 @@
 ﻿
 using DomainLayer.Models;
 using System;
+using System.Windows;
+using System.Windows.Input;
 using ViewLayer.Helpers;
 using ViewLayer.Shared;
 
@@ -17,12 +19,13 @@ namespace ViewLayer.ViewModels
         public MainViewModel(FileModel fileModel)
         {
             this.FileModel = fileModel;
-            //FileModel.CanExecuteChanged += OnCanExecuteChanged;
+
+            FileModel.CanExecuteChanged += OnCanExecuteChanged;
 
             SelectFileCommand = new RelayCommand((param) =>
             {
                 FileModel.FileName = FileSystemHelper.GetFileName();
-            });
+            },param => !FileModel.IsProcessActive);
 
             StartProcessCommand = new RelayCommand((param) =>
             {
@@ -34,9 +37,10 @@ namespace ViewLayer.ViewModels
                 FileModel.StopProcess();
             }, param => !string.IsNullOrEmpty(FileModel.FileName) && FileModel.IsProcessActive);
         }
+
         private void OnCanExecuteChanged(object sender, EventArgs e)
         {
-            //StartProcessCommand.RaiseCanExecuteChanged();
+            CommandManager.InvalidateRequerySuggested();
         }
     }
 }

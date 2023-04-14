@@ -29,15 +29,17 @@
             Grid.Row="0"
             Grid.RowSpan="2"
             Grid.ColumnSpan="3"
-            Margin="25,10,25,10">
+            Margin="25,10,25,10"
+            AutoGenerateColumns="False"
+            ItemsSource="{Binding FileModel.Words}">
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="5*"
-                    Binding="{Binding Name}"
+                    Binding="{Binding Word}"
                     Header="{DynamicResource Word}" />
                 <DataGridTextColumn
                     Width="45"
-                    Binding="{Binding Name}"
+                    Binding="{Binding Count}"
                     Header="{DynamicResource WordCount}" />
             </DataGrid.Columns>
         </DataGrid>
@@ -51,7 +53,7 @@
             Margin="25,0,25,0"
             HorizontalAlignment="Stretch"
             Maximum="100"
-            Value="{Binding FileModel.Progress, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+            Value="{Binding FileModel.Progress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
         <Label
             Grid.Row="3"
             Grid.Column="0"
