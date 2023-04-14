@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DomainLayer.Models;
+using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using ViewLayer.Interfaces;
 using ViewLayer.Services;
@@ -22,15 +23,16 @@ namespace TextProcessor
         private void ConfigureServices(ServiceCollection services)
         {
             //Services
-            services.AddSingleton<INavigationService, NavigationService>();
-            services.AddSingleton<DomainLayer.BusinessLogic.TextProcessor>();
+            services.AddSingleton<INavigationService, NavigationService>();            
 
-            //Windows
+            //Views
             services.AddSingleton<MainWindow>();
 
             //ViewModels
             services.AddSingleton<MainViewModel>();
 
+            //Models
+            services.AddSingleton<FileModel>();
         }
         private void OnStartup(object sender, StartupEventArgs e)
         {

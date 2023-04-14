@@ -7,28 +7,30 @@ namespace ViewLayer.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        private FileModel fileModel;
-        public FileModel FileModel { get => fileModel; set { fileModel = value; OnPropertyChanged(); } }
+        private FileModel _fileModel;
+        public FileModel FileModel { get => _fileModel; set { _fileModel = value; OnPropertyChanged(); } }
         public RelayCommand SelectFileCommand { get; set; }
         public RelayCommand StartProcessCommand { get; set; }
         public RelayCommand CancelProcessCommand { get; set; }
 
-        public MainViewModel(DomainLayer.BusinessLogic.TextProcessor textProcessor)
-        {            
+        public MainViewModel(FileModel fileModel)
+        {
+            this.FileModel = fileModel;
+
             SelectFileCommand = new RelayCommand((param) =>
             {
-                FileModel = new FileModel() { FileName = FileSystemHelper.GetFileName() };
+                FileModel.FileName = FileSystemHelper.GetFileName();
             });
 
             StartProcessCommand = new RelayCommand((param) =>
             {
-               textProcessor.ProcessAsync();
-            }, param => FileModel != null);
+                FileModel.ProcessFile();
+            }, param => !string.IsNullOrEmpty(FileModel.FileName) && !FileModel.IsProcessActive);
 
             CancelProcessCommand = new RelayCommand((param) =>
             {
-                textProcessor.StopProcess();
-            });
+                FileModel.StopProcess();
+            }, param => !string.IsNullOrEmpty(FileModel.FileName) && FileModel.IsProcessActive);
         }
     }
 }
