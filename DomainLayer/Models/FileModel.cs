@@ -1,6 +1,7 @@
 ﻿
 
 using DomainLayer.BusinessLogic;
+using System;
 using System.Diagnostics;
 
 namespace DomainLayer.Models
@@ -9,31 +10,38 @@ namespace DomainLayer.Models
     {
         private TextProcessor _textProcessor;
 
-        private string _fileName = "";
+        public event EventHandler CanExecuteChanged;
+
+        private string _fileName;
         public string FileName { get => _fileName; set { _fileName = value; OnPropertyChanged(); } }
 
-        private bool _isProcessActive = false;        
-        public bool IsProcessActive { get => _isProcessActive; set { _isProcessActive = value; OnPropertyChanged(); } }
+        private bool _isProcessActive;
+        public bool IsProcessActive
+        {
+            get => _isProcessActive;
+            set
+            {
+                _isProcessActive = value;
+                OnPropertyChanged();
+                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
-        private int _progress;
-        public int Progress { get => _progress; set { _progress = value; OnPropertyChanged(); } }
+        private double _progress;
+        public double Progress { get => _progress; set { _progress = value; OnPropertyChanged(); } }
 
         public FileModel()
         {
-            _textProcessor = new TextProcessor();
+            _textProcessor = new TextProcessor(active => IsProcessActive = active);
         }
         public void ProcessFile()
         {
             Progress = 0;
 
-            IsProcessActive = true;
-
-            _textProcessor.ProcessAsync(FileName, progres => { Progress += progres; Debug.WriteLine(Progress); });
+            _textProcessor.ProcessAsync(FileName, progres => { Progress += progres; });
         }
         public void StopProcess()
         {
-            IsProcessActive = false;
-
             _textProcessor.StopProcess();
         }
     }

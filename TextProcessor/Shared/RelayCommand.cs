@@ -15,6 +15,7 @@ namespace ViewLayer.Shared
         readonly Action<object> _execute;
         readonly Predicate<object> _canExecute;
 
+        public event EventHandler CanExecuteChanged;
         #endregion // Fields
 
         #region Constructors
@@ -42,17 +43,21 @@ namespace ViewLayer.Shared
             return _canExecute == null ? true : _canExecute(parameter);
         }
 
-        public event EventHandler CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
+        //public event EventHandler CanExecuteChanged
+        //{
+        //    add { CommandManager.RequerySuggested += value; }
+        //    remove { CommandManager.RequerySuggested -= value; }
+        //}
 
         public void Execute(object parameter)
         {
             _execute(parameter);
         }
 
+        public void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
         #endregion // ICommand Members
     }
 }
