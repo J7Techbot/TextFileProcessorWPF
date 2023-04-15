@@ -2,6 +2,7 @@
 using DomainLayer.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DomainLayer.Models
 {
@@ -51,6 +52,8 @@ namespace DomainLayer.Models
         public async void ProcessFile()
         {
             Data = await FileProcessor.ProcessFileAsync(FileName, new char[] { ' ', '\r', '\n' });
+            
+            Data = Data.OrderBy(kvp => kvp.Value).ThenBy(kvp=>kvp.Key).ToDictionary(kvp => kvp.Key, kvp=> kvp.Value);
         }
 
         /// <summary>

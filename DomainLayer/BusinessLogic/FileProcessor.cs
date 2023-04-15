@@ -21,9 +21,13 @@ namespace DomainLayer.BusinessLogic
         /// <value>Invoked when state of proces changed.</value>
         public Action<bool> ProcessActiveStateChanged { get; set; }
 
-        /// <value>Represent progres of parce process.</value>
-        public float Progress { get => _progress; set { _progress = value; OnPropertyChanged(); } }
-        private float _progress;       
+        /// <value>Represent progres of parse process.</value>
+        public int Progress { get => _progress; private set => _progress = value; }
+        private int _progress;
+
+        /// <value>Represent count of words in processed file.</value>
+        public int TotalWords { get => _totalWords; private set { _totalWords = value; OnPropertyChanged(); } }
+        private int _totalWords = 1;
 
         /// <summary>
         /// Process the file and return all words contained in it as a dictionary, where the key is the word and the value is the count of occurrences in the file.
@@ -52,6 +56,8 @@ namespace DomainLayer.BusinessLogic
         {
             _cancellationTokenSource.Cancel();
 
+            Progress = 0;
+
             ProcessActiveStateChanged.Invoke(false);
         }
 
@@ -67,6 +73,8 @@ namespace DomainLayer.BusinessLogic
 
             string[] words;
 
+            ConcurrentDictionary<string, int> wordsCount = new ConcurrentDictionary<string, int>();
+
             try
             {
                 words = File.ReadAllText(fileName).Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
@@ -76,7 +84,7 @@ namespace DomainLayer.BusinessLogic
                 return null;
             }
 
-            var wordsCount = new ConcurrentDictionary<string, int>();
+            TotalWords = words.Count();
 
             Parallel.ForEach(words, word =>
             {
@@ -84,7 +92,8 @@ namespace DomainLayer.BusinessLogic
                 {
                     wordsCount.AddOrUpdate(word, 1, (key, oldValue) => oldValue + 1);
 
-                    Progress += (float)100 / words.Length;
+                    Interlocked.Increment(ref _progress);
+                    OnPropertyChanged(nameof(Progress));
                 }
             });
 

@@ -10,8 +10,8 @@ namespace DomainLayer.Interfaces
     public interface IFileProcessor
     {
         /// <value>Represent progres of parce process.</value>
-        public float Progress { get; set; }
-
+        public int Progress { get; }
+        public int TotalWords { get; }
         /// <value>Invoked when state of proces changed.</value>
         public Action<bool> ProcessActiveStateChanged { get; set; }
 
