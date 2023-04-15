@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace DomainLayer.Models
 {
+    /// <summary>
+    /// Implements INotifyPropertyCHanged
+    /// </summary>
     public class BaseModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

@@ -15,38 +15,51 @@ namespace ViewLayer.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        private FileModel _fileModel;
-        public FileModel FileModel { get => _fileModel; set { _fileModel = value; OnPropertyChanged(); } }
+        /// <value>Holds properties and logic for view</value>
+        public MainModel MainModel { get => _fileModel; set { _fileModel = value; OnPropertyChanged(); } }
+        private MainModel _fileModel;
 
+        /// <value>Open a dialog for selecting a file and save the selected path to the FilePath property.</value>
         public RelayCommand SelectFileCommand { get; set; }
+        /// <value>Executes the file parsing operation and stores the parsed data in the model .</value>
         public RelayCommand StartProcessCommand { get; set; }
+        /// <value>Terminate file parsing operation.</value>
         public RelayCommand CancelProcessCommand { get; set; }
 
-        public MainViewModel(FileModel fileModel)
+        /// <summary>
+        /// Initialize viewmodel
+        /// </summary>
+        /// <param name="mainModel"></param>
+        public MainViewModel(MainModel mainModel)
         {
-            this.FileModel = fileModel;
+            this.MainModel = mainModel;
 
-            FileModel.CanExecuteChanged += OnCanExecuteChanged;
+            MainModel.CanExecuteChanged += OnCanExecuteChanged;
 
             SelectFileCommand = new RelayCommand((param) =>
             {
-                FileModel.FileName = FileSystemHelper.GetFileName("Text file(*.txt)|*.txt");
+                MainModel.FileName = FileSystemHelper.GetFileName("Text file(*.txt)|*.txt");
 
-            },param => !FileModel.IsProcessActive);
+            },param => !MainModel.IsProcessActive);
 
             StartProcessCommand = new RelayCommand((param) =>
             {
-               FileModel.ProcessFile();
+               MainModel.ProcessFile();
 
-            }, param => !string.IsNullOrEmpty(FileModel.FileName) && !FileModel.IsProcessActive);
+            }, param => !string.IsNullOrEmpty(MainModel.FileName) && !MainModel.IsProcessActive);
 
             CancelProcessCommand = new RelayCommand((param) =>
             {
-                FileModel.StopProcess();
+                MainModel.StopProcess();
 
-            }, param => !string.IsNullOrEmpty(FileModel.FileName) && FileModel.IsProcessActive);
+            }, param => !string.IsNullOrEmpty(MainModel.FileName) && MainModel.IsProcessActive);
         }
 
+        /// <summary>
+        /// Resets CanExecute at commands.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnCanExecuteChanged(object sender, EventArgs e)
         {
             CommandManager.InvalidateRequerySuggested();

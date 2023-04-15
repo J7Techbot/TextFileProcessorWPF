@@ -35,7 +35,6 @@ namespace ViewLayer.Shared
         #endregion 
 
         #region ICommand Members
-
         [DebuggerStepThrough]
         public bool CanExecute(object parameter)
         {
@@ -52,8 +51,6 @@ namespace ViewLayer.Shared
         {
             _execute(parameter);
         }
-
-
         #endregion 
     }
 }

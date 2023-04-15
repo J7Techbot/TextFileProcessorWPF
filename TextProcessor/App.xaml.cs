@@ -7,6 +7,7 @@ using ViewLayer.Interfaces;
 using ViewLayer.Services;
 using ViewLayer.ViewModels;
 using DomainLayer.BusinessLogic;
+using DomainLayer.Interfaces;
 
 namespace TextProcessor
 {
@@ -35,8 +36,8 @@ namespace TextProcessor
             services.AddSingleton<MainViewModel>();
 
             //Models
-            services.AddSingleton<FileModel>();
-            services.AddSingleton<FileProcessor>();
+            services.AddSingleton<MainModel>();
+            services.AddSingleton<IFileProcessor,FileProcessor>();
         }
         private void OnStartup(object sender, StartupEventArgs e)
         {

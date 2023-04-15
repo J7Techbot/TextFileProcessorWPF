@@ -15,12 +15,11 @@ namespace ViewLayer.Services
             _serviceProvider = serviceProvider;
         }
 
-        private Window CreateNewWindowDialog<T>() where T : Window, new()
-        {
-            T newWindow = new T();
-
-            return newWindow;
-        }
+        /// <summary>
+        /// Opens new window as dialog.
+        /// </summary>
+        /// <typeparam name="T">Type of window to open.</typeparam>
+        /// <param name="vm">DataContext of window</param>        
         public void ShowDialog<T>(BaseViewModel vm) where T : Window, new()
         {
             var dialog = CreateNewWindowDialog<T>();
@@ -28,6 +27,11 @@ namespace ViewLayer.Services
             dialog.ShowDialog();
         }
 
+        /// <summary>
+        /// Opens new window as dialog with injected dependencies.If window implements <see cref="IActivable"/> runs initialization before window is loaded.
+        /// </summary>
+        /// <typeparam name="T">Type of window to open.</typeparam>
+        /// <param name="param"></param>
         public async void ShowDialogInjectAsync<T>(object param = null) where T : Window
         {
             var window = _serviceProvider.GetRequiredService<T>();
@@ -38,6 +42,18 @@ namespace ViewLayer.Services
             }
 
             window.ShowDialog();
+        }
+
+        /// <summary>
+        /// Create new window of type <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        private Window CreateNewWindowDialog<T>() where T : Window, new()
+        {
+            T newWindow = new T();
+
+            return newWindow;
         }
     }
 }

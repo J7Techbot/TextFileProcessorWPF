@@ -31,7 +31,7 @@
             Grid.ColumnSpan="3"
             Margin="25,10,25,10"
             AutoGenerateColumns="False"
-            ItemsSource="{Binding FileModel.Words}">
+            ItemsSource="{Binding FileModel.Data}">
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="5*"
