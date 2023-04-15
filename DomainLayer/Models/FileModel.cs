@@ -1,6 +1,6 @@
 ﻿using DomainLayer.BusinessLogic;
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace DomainLayer.Models
 {
@@ -10,8 +10,8 @@ namespace DomainLayer.Models
 
         public event EventHandler CanExecuteChanged;
 
-        private ConcurrentDictionary<string,int> _words;
-        public ConcurrentDictionary<string, int> Words { get => _words; set { _words = value; OnPropertyChanged(); } }
+        private Dictionary<string,int> _words;
+        public Dictionary<string, int> Words { get => _words; set { _words = value; OnPropertyChanged(); } }
 
         private string _fileName;
         public string FileName { get => _fileName; set { _fileName = value; OnPropertyChanged(); } }
@@ -40,7 +40,6 @@ namespace DomainLayer.Models
         {
             Words = await FileProcessor.ProcessAsync(FileName);
         }
-
 
         public void StopProcess()
         {

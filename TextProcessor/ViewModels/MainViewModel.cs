@@ -31,17 +31,19 @@ namespace ViewLayer.ViewModels
             SelectFileCommand = new RelayCommand((param) =>
             {
                 FileModel.FileName = FileSystemHelper.GetFileName("Text file(*.txt)|*.txt");
-                Debug.WriteLine(FileModel?.Words?.Count);
+
             },param => !FileModel.IsProcessActive);
 
             StartProcessCommand = new RelayCommand((param) =>
             {
                FileModel.ProcessFile();
+
             }, param => !string.IsNullOrEmpty(FileModel.FileName) && !FileModel.IsProcessActive);
 
             CancelProcessCommand = new RelayCommand((param) =>
             {
                 FileModel.StopProcess();
+
             }, param => !string.IsNullOrEmpty(FileModel.FileName) && FileModel.IsProcessActive);
         }
 

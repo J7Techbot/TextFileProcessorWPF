@@ -1,6 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -30,7 +30,7 @@ namespace DomainLayer.BusinessLogic
             Debug.WriteLine("Process stoped!");
         }
 
-        public async Task<ConcurrentDictionary<string, int>> ProcessAsync(string fileName)
+        public async Task<Dictionary<string, int>> ProcessAsync(string fileName)
         {            
             ProcessActiveStateChanged.Invoke(true);
 
@@ -41,13 +41,14 @@ namespace DomainLayer.BusinessLogic
 
             ProcessActiveStateChanged.Invoke(false);
 
-            return wordsCount;
+            return wordsCount.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
         public ConcurrentDictionary<string, int> Parse(string fileName)
         {
             Progress = 0;
 
             string[] words;
+
             try
             {
                 words = File.ReadAllText(fileName).Split(new char[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
@@ -56,6 +57,7 @@ namespace DomainLayer.BusinessLogic
             {
                 return null;
             }
+
             var wordsCount = new ConcurrentDictionary<string, int>();
 
             ParallelLoopResult loopResult = Parallel.ForEach(words, word =>
