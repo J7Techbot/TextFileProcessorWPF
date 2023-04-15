@@ -1,26 +1,21 @@
-﻿
-
-using DomainLayer.BusinessLogic;
+﻿using DomainLayer.BusinessLogic;
 using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace DomainLayer.Models
 {
     public class FileModel : BaseModel
     {
-        private TextProcessor _textProcessor;
+        public FileProcessor FileProcessor { get; set; }
 
         public event EventHandler CanExecuteChanged;
-       
-        private ObservableCollection<WordWrapperModel> words = new ObservableCollection<WordWrapperModel>();
-        public ObservableCollection<WordWrapperModel> Words { get => words; set { words = value; OnPropertyChanged(); } }
+
+        private ConcurrentDictionary<string,int> _words;
+        public ConcurrentDictionary<string, int> Words { get => _words; set { _words = value; OnPropertyChanged(); } }
 
         private string _fileName;
         public string FileName { get => _fileName; set { _fileName = value; OnPropertyChanged(); } }
 
-        private double _progress;
-        public double Progress { get => _progress; set { _progress = value; OnPropertyChanged(); } }
 
         private bool _isProcessActive;
         public bool IsProcessActive
@@ -34,19 +29,22 @@ namespace DomainLayer.Models
             }
         }
 
-        public FileModel()
+        public FileModel(FileProcessor fileProcessor)
         {
-            _textProcessor = new TextProcessor(active => IsProcessActive = active);
+            FileProcessor = fileProcessor; 
+
+            FileProcessor.ProcessActiveStateChanged += (active) => IsProcessActive = active;
         }
+
         public async void ProcessFile()
         {
-            Progress = 0;
-
-            await _textProcessor.ProcessAsync(FileName, progres => { Progress += progres; }, word => Words.Add(new WordWrapperModel() { Word = word }));
+            Words = await FileProcessor.ProcessAsync(FileName);
         }
+
+
         public void StopProcess()
         {
-            _textProcessor.StopProcess();
+            FileProcessor.StopProcess();
         }
     }
 }

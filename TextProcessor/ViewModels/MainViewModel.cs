@@ -1,6 +1,11 @@
 ﻿
 using DomainLayer.Models;
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using ViewLayer.Helpers;
@@ -12,6 +17,7 @@ namespace ViewLayer.ViewModels
     {
         private FileModel _fileModel;
         public FileModel FileModel { get => _fileModel; set { _fileModel = value; OnPropertyChanged(); } }
+
         public RelayCommand SelectFileCommand { get; set; }
         public RelayCommand StartProcessCommand { get; set; }
         public RelayCommand CancelProcessCommand { get; set; }
@@ -24,12 +30,13 @@ namespace ViewLayer.ViewModels
 
             SelectFileCommand = new RelayCommand((param) =>
             {
-                FileModel.FileName = FileSystemHelper.GetFileName();
+                FileModel.FileName = FileSystemHelper.GetFileName("Text file(*.txt)|*.txt");
+                Debug.WriteLine(FileModel?.Words?.Count);
             },param => !FileModel.IsProcessActive);
 
             StartProcessCommand = new RelayCommand((param) =>
             {
-                FileModel.ProcessFile();
+               FileModel.ProcessFile();
             }, param => !string.IsNullOrEmpty(FileModel.FileName) && !FileModel.IsProcessActive);
 
             CancelProcessCommand = new RelayCommand((param) =>

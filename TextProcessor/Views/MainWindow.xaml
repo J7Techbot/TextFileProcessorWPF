@@ -35,11 +35,11 @@
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="5*"
-                    Binding="{Binding Word}"
+                    Binding="{Binding Key}"
                     Header="{DynamicResource Word}" />
                 <DataGridTextColumn
                     Width="45"
-                    Binding="{Binding Count}"
+                    Binding="{Binding Value}"
                     Header="{DynamicResource WordCount}" />
             </DataGrid.Columns>
         </DataGrid>
@@ -53,7 +53,7 @@
             Margin="25,0,25,0"
             HorizontalAlignment="Stretch"
             Maximum="100"
-            Value="{Binding FileModel.Progress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+            Value="{Binding FileModel.FileProcessor.Progress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
         <Label
             Grid.Row="3"
             Grid.Column="0"
