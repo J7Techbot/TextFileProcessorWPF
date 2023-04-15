@@ -36,7 +36,7 @@ namespace TextProcessor
             services.AddSingleton<MainViewModel>();
 
             //Models
-            services.AddSingleton<MainModel>();
+            services.AddSingleton<FileModel>();
             services.AddSingleton<IFileProcessor,FileProcessor>();
         }
         private void OnStartup(object sender, StartupEventArgs e)

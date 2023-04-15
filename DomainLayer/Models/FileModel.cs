@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DomainLayer.Models
 {
-    public class MainModel : BaseModel
+    public class FileModel : BaseModel
     {
         /// <value>Contains parse logic.</value>
         public IFileProcessor FileProcessor { get; set; }
@@ -38,7 +38,7 @@ namespace DomainLayer.Models
         /// Initialize model
         /// </summary>
         /// <param name="fileProcessor"></param>
-        public MainModel(IFileProcessor fileProcessor)
+        public FileModel(IFileProcessor fileProcessor)
         {
             FileProcessor = fileProcessor; 
 

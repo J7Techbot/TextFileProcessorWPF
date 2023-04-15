@@ -16,8 +16,8 @@ namespace ViewLayer.ViewModels
     public class MainViewModel : BaseViewModel
     {
         /// <value>Holds properties and logic for view</value>
-        public MainModel MainModel { get => _fileModel; set { _fileModel = value; OnPropertyChanged(); } }
-        private MainModel _fileModel;
+        public FileModel FileModel { get => _fileModel; set { _fileModel = value; OnPropertyChanged(); } }
+        private FileModel _fileModel;
 
         /// <value>Open a dialog for selecting a file and save the selected path to the FilePath property.</value>
         public RelayCommand SelectFileCommand { get; set; }
@@ -29,30 +29,30 @@ namespace ViewLayer.ViewModels
         /// <summary>
         /// Initialize viewmodel
         /// </summary>
-        /// <param name="mainModel"></param>
-        public MainViewModel(MainModel mainModel)
+        /// <param name="fileModel"></param>
+        public MainViewModel(FileModel fileModel)
         {
-            this.MainModel = mainModel;
+            this.FileModel = fileModel;
 
-            MainModel.CanExecuteChanged += OnCanExecuteChanged;
+            FileModel.CanExecuteChanged += OnCanExecuteChanged;
 
             SelectFileCommand = new RelayCommand((param) =>
             {
-                MainModel.FileName = FileSystemHelper.GetFileName("Text file(*.txt)|*.txt");
+                FileModel.FileName = FileSystemHelper.GetFileName("Text file(*.txt)|*.txt");
 
-            },param => !MainModel.IsProcessActive);
+            },param => !FileModel.IsProcessActive);
 
             StartProcessCommand = new RelayCommand((param) =>
             {
-               MainModel.ProcessFile();
+               FileModel.ProcessFile();
 
-            }, param => !string.IsNullOrEmpty(MainModel.FileName) && !MainModel.IsProcessActive);
+            }, param => !string.IsNullOrEmpty(FileModel.FileName) && !FileModel.IsProcessActive);
 
             CancelProcessCommand = new RelayCommand((param) =>
             {
-                MainModel.StopProcess();
+                FileModel.StopProcess();
 
-            }, param => !string.IsNullOrEmpty(MainModel.FileName) && MainModel.IsProcessActive);
+            }, param => !string.IsNullOrEmpty(FileModel.FileName) && FileModel.IsProcessActive);
         }
 
         /// <summary>

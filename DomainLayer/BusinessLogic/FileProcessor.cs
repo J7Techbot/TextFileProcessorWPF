@@ -92,6 +92,7 @@ namespace DomainLayer.BusinessLogic
         }
 
 
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
