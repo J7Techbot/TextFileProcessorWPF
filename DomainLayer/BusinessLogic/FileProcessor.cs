@@ -71,7 +71,6 @@ namespace DomainLayer.BusinessLogic
 
             ConcurrentDictionary<string, int> wordsCount = new ConcurrentDictionary<string, int>();
 
-            return new Dictionary<string, int>();
             try
             {
                 words = File.ReadAllText(fileName).Split(delimiters, StringSplitOptions.RemoveEmptyEntries);

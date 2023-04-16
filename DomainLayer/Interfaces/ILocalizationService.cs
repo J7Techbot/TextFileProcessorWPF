@@ -1,5 +1,4 @@
-﻿
-namespace DomainLayer.Interfaces
+﻿namespace DomainLayer.Interfaces
 {
     public interface ILocalizationService
     {

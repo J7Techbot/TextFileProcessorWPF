@@ -1,12 +1,5 @@
-﻿
-using DomainLayer.Models;
+﻿using DomainLayer.Models;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using ViewLayer.Helpers;
 using ViewLayer.Shared;
@@ -41,6 +34,7 @@ namespace ViewLayer.ViewModels
             SelectFileCommand = new RelayCommand((param) =>
             {
                 FileModel.FileName = FileSystemHelper.GetFileName(fileFilter);
+                FileModel.InfoPanel = FileModel.FileName;
 
             },param => !FileModel.IsProcessActive);
 

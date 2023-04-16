@@ -1,5 +1,4 @@
-﻿using DomainLayer.BusinessLogic;
-using DomainLayer.Interfaces;
+﻿using DomainLayer.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +22,10 @@ namespace DomainLayer.Models
         /// <value>Path to file.</value>
         public string FileName { get => _fileName; set { _fileName = value; OnPropertyChanged(); } }
         private string _fileName;
+
+        /// <value>Propagate info massage to user.</value>
+        public string InfoPanel { get => _infoPanel; set { _infoPanel = value; OnPropertyChanged(); } }
+        private string _infoPanel;
 
         /// <value>Represents state of parsing process. If the process is running, it returns true.</value>
         public bool IsProcessActive
@@ -55,12 +58,14 @@ namespace DomainLayer.Models
         /// </summary>
         public async void ProcessFile()
         {
+            InfoPanel = FileName;
+
             Data = await FileProcessor.ProcessFileAsync(FileName, new char[] { ' ', '\r', '\n' });
             
             Data = Data.OrderBy(kvp => kvp.Value).ThenBy(kvp=>kvp.Key).ToDictionary(kvp => kvp.Key, kvp=> kvp.Value);
 
-            if (Data.Count == 0) 
-                FileName = _localizationService.GetValue("FileReadFailed"); 
+            if (Data.Count == 0)
+                InfoPanel = _localizationService.GetValue("FileReadFailed"); 
         }
 
         /// <summary>

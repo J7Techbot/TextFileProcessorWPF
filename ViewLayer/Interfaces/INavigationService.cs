@@ -1,5 +1,4 @@
-﻿
-using System.Windows;
+﻿using System.Windows;
 using ViewLayer.ViewModels;
 
 namespace ViewLayer.Interfaces

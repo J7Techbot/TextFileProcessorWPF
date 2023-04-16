@@ -1,5 +1,4 @@
-﻿
-namespace DomainLayer.Extensions
+﻿namespace DomainLayer.Extensions
 {
     public static class MathExtension 
     {

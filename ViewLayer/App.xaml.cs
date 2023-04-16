@@ -46,7 +46,6 @@ namespace TextProcessor
 
             SetupExceptionHandling();
         }
-
         private void SetupExceptionHandling()
         {
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
@@ -64,7 +63,6 @@ namespace TextProcessor
                 e.SetObserved();
             };
         }
-
         private void ShowUnhandledException(Exception exception, string source)
         {
             MessageBox.Show(exception.ToString());
