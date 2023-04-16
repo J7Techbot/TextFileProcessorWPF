@@ -6,4 +6,5 @@
     <s:String x:Key="SelectFile">Select file</s:String>
     <s:String x:Key="Word">Word</s:String>
     <s:String x:Key="WordCount">Count</s:String>
+    <s:String x:Key="FileReadFailed">Cannot read from file.</s:String>
 </ResourceDictionary>

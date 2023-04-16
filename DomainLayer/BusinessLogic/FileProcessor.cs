@@ -2,13 +2,11 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using DomainLayer.Extensions;
 using DomainLayer.Interfaces;
 
 namespace DomainLayer.BusinessLogic
@@ -54,9 +52,7 @@ namespace DomainLayer.BusinessLogic
         /// </summary>
         public void StopProcess()
         {
-            _cancellationTokenSource.Cancel();
-
-            Progress = 0;
+            _cancellationTokenSource.Cancel();            
 
             ProcessActiveStateChanged.Invoke(false);
         }
@@ -66,7 +62,7 @@ namespace DomainLayer.BusinessLogic
         /// </summary>
         /// <param name="fileName">Path to file</param>
         /// <param name="delimiters">Defines the criterion by which words will be divided</param>
-        /// <returns>Dictionary with words and occurrences.If file canot be readed, return null. </returns>
+        /// <returns>Dictionary with words and occurrences. If file canot be readed, return empty Dictionary. </returns>
         private Dictionary<string, int> ParseFile(string fileName, char[] delimiters)
         {
             Progress = 0;
@@ -75,15 +71,16 @@ namespace DomainLayer.BusinessLogic
 
             ConcurrentDictionary<string, int> wordsCount = new ConcurrentDictionary<string, int>();
 
+            return new Dictionary<string, int>();
             try
             {
                 words = File.ReadAllText(fileName).Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
             }
             catch
             {
-                return null;
+                return new Dictionary<string, int>();
             }
-
+           
             TotalWords = words.Count();
 
             Parallel.ForEach(words, word =>
@@ -95,6 +92,8 @@ namespace DomainLayer.BusinessLogic
                     Interlocked.Increment(ref _progress);
                     OnPropertyChanged(nameof(Progress));
                 }
+                else
+                    Progress = 0;
             });
 
             return wordsCount.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);

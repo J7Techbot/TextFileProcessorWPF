@@ -8,9 +8,11 @@ namespace DomainLayer.Models
 {
     public class FileModel : BaseModel
     {
+        private readonly ILocalizationService _localizationService;
+
         /// <value>Contains parse logic.</value>
         public IFileProcessor FileProcessor { get; set; }
-
+        
         /// <value>Informs viewModel that commands needs to be updated.</value>
         public event EventHandler CanExecuteChanged;
 
@@ -39,11 +41,13 @@ namespace DomainLayer.Models
         /// Initialize model
         /// </summary>
         /// <param name="fileProcessor"></param>
-        public FileModel(IFileProcessor fileProcessor)
+        public FileModel(IFileProcessor fileProcessor, ILocalizationService localizationService)
         {
-            FileProcessor = fileProcessor; 
+            FileProcessor = fileProcessor;
 
             FileProcessor.ProcessActiveStateChanged += (active) => IsProcessActive = active;
+
+            _localizationService = localizationService;
         }
 
         /// <summary>
@@ -54,6 +58,9 @@ namespace DomainLayer.Models
             Data = await FileProcessor.ProcessFileAsync(FileName, new char[] { ' ', '\r', '\n' });
             
             Data = Data.OrderBy(kvp => kvp.Value).ThenBy(kvp=>kvp.Key).ToDictionary(kvp => kvp.Key, kvp=> kvp.Value);
+
+            if (Data.Count == 0) 
+                FileName = _localizationService.GetValue("FileReadFailed"); 
         }
 
         /// <summary>

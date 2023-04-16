@@ -15,6 +15,8 @@ namespace ViewLayer.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+        const string fileFilter = "Text file(*.txt)|*.txt";
+
         /// <value>Holds properties and logic for view</value>
         public FileModel FileModel { get => _fileModel; set { _fileModel = value; OnPropertyChanged(); } }
         private FileModel _fileModel;
@@ -38,7 +40,7 @@ namespace ViewLayer.ViewModels
 
             SelectFileCommand = new RelayCommand((param) =>
             {
-                FileModel.FileName = FileSystemHelper.GetFileName("Text file(*.txt)|*.txt");
+                FileModel.FileName = FileSystemHelper.GetFileName(fileFilter);
 
             },param => !FileModel.IsProcessActive);
 

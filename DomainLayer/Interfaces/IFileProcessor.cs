@@ -20,7 +20,7 @@ namespace DomainLayer.Interfaces
         /// </summary>
         /// <param name="fileName">Path to file</param>
         /// <param name="delimiters">Defines the criterion by which words will be divided.</param>
-        /// <returns>Dictionary with words and occurrences.If file canot be readed, return null.</returns>
+        /// <returns>Dictionary with words and occurrences. If file canot be readed, return empty Dictionary.</returns>
         public Task<Dictionary<string, int>> ProcessFileAsync(string fileName, char[] delimiters);
 
         /// <summary>

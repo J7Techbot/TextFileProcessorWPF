@@ -27,7 +27,8 @@ namespace TextProcessor
         private void ConfigureServices(ServiceCollection services)
         {
             //Services
-            services.AddSingleton<INavigationService, NavigationService>();            
+            services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<ILocalizationService, LocalizationService>();
 
             //Views
             services.AddSingleton<MainWindow>();
